@@ -1,0 +1,10 @@
+From Anaconda Prompt:
+
+#pip install pandas
+#pip install matplotlib
+#pip install -U scikit-learn
+
+(For the below module: Request adinistrator access first: Run as administrator)
+#pip install tensorflow
+
+# conda list (to check they are all installed)
