@@ -342,7 +342,7 @@ def merge_rasters(
     out_datatype="uint16",
     tmp=".",
     ram=42000,
-    obt_path="C:/Program Files/OTB-7.4.0-Win64/",
+    obt_path="C:/OTB-7.4.0-Win64/bin/",
     harmonisation=False,
     nodata_value=0,
     pixel_width=None,
@@ -350,7 +350,7 @@ def merge_rasters(
 ):
     """Creates a mosaic out of a series of images. Must be of the same projection"""
 
-    cli = "otbcli_Mosaic"
+    cli = obt_path + "otbcli_Mosaic"
 
     if options is None:
         options = {
