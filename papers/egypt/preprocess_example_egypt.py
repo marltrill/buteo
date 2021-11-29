@@ -167,13 +167,18 @@ s2_mosaic_B04 = folder_s2_mosaic + "B04_10m.tif"
 
 #     print(f"Completed {idx+1}/{len(zip_files_s1)}")
 
+vv_paths = glob(folder_tmp + "*_Gamma0_VV.tif"),
+vh_paths = glob(folder_tmp + "*_Gamma0_VH.tif"),
+folder_out=folder_s1_mosaic
+
 # Mosaic the sentinel 1 images
 mosaic_s1(
-    glob(folder_tmp + "*_Gamma0_VV.tif"),
-    [], #glob(folder_tmp + "*_Gamma0_VH.tif"),
-    folder_s1_mosaic,
+    vv_paths,
+    vh_paths,
+    folder_out,
     folder_tmp,
     s2_mosaic_B04,
+    chunks=3,
 )
 
 # %%
