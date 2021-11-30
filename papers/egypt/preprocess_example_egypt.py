@@ -86,7 +86,7 @@ onda_pass = "ONDA!Marltrill29"
 #     mosaic_tile_s2(
 #         folder_tmp,
 #         tile,
-#         folder_tmp,
+#         folder_s2_mosaic,
 #         process_bands=[
 #             {"size": "10m", "band": "B02"},
 #             {"size": "10m", "band": "B03"},
@@ -108,9 +108,9 @@ onda_pass = "ONDA!Marltrill29"
 
 # # Merge the sentinel 2 mosaics 10m and 20m seperately
 # join_s2_tiles(
-#     folder_tmp,
 #     folder_s2_mosaic,
-#     folder_tmp,
+#     folder_raster,
+#     folder_s2_mosaic,
 #     harmonisation=True,
 #     pixel_height=10.0,
 #     pixel_width=10.0,
@@ -125,9 +125,9 @@ onda_pass = "ONDA!Marltrill29"
 # )
 
 # join_s2_tiles(
-#     folder_tmp,
 #     folder_s2_mosaic,
-#     folder_tmp,
+#     folder_raster,
+#     folder_s2_mosaic,
 #     harmonisation=True,
 #     pixel_height=20.0,
 #     pixel_width=20.0,
@@ -145,10 +145,16 @@ onda_pass = "ONDA!Marltrill29"
 
 # exit()
 # delete_files_in_folder(folder_tmp)
+# # #Fix: we lost the step 2 .tif files, so we had to create them again from the .dim and convert to dB
+# from buteo.earth_observation.s1_preprocess import convert_to_tiff
 
+# dims = glob(folder_tmp + "*step_2.dim")
 
-s2_mosaic_B12 = folder_s2_mosaic + "B12_20m.tif"
-s2_mosaic_B04 = folder_s2_mosaic + "B04_10m.tif"
+# for dim in dims:
+#     convert_to_tiff(dim, folder_tmp, True)
+
+# #s2_mosaic_B12 = folder_raster + "B12_20m.tif"
+
 
 # # Preprocess the sentinel 1 images
 # zip_files_s1 = glob(folder_s1_raw + "*.zip")
@@ -157,7 +163,7 @@ s2_mosaic_B04 = folder_s2_mosaic + "B04_10m.tif"
 #         backscatter(
 #             image,
 #             folder_tmp,
-#             folder_tmp,
+#             folder_s1_mosaic,
 #             extent=s2_mosaic_B12,
 #             epsg=project_epsg,
 #             decibel=True,
@@ -166,19 +172,17 @@ s2_mosaic_B04 = folder_s2_mosaic + "B04_10m.tif"
 #         raise Exception(f"Error with image: {image}, {e}")
 
 #     print(f"Completed {idx+1}/{len(zip_files_s1)}")
-
-vv_paths = glob(folder_tmp + "*_Gamma0_VV.tif"),
-vh_paths = glob(folder_tmp + "*_Gamma0_VH.tif"),
-folder_out=folder_s1_mosaic
+folder_in= "C:/Users/MALT/Desktop/Gamma0/"
+s2_mosaic_B04 = folder_raster + "B04_10_left.tif"
+vv_paths = glob(folder_in + "*_Gamma0_VV.tif")
+vh_paths = glob(folder_in + "*_Gamma0_VH.tif")
 
 # Mosaic the sentinel 1 images
 mosaic_s1(
     vv_paths,
     vh_paths,
-    folder_out,
-    folder_tmp,
+    folder_raster,
+    folder_in,
     s2_mosaic_B04,
     chunks=3,
 )
-
-# %%
