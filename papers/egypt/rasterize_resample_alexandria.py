@@ -17,9 +17,9 @@ from buteo.machine_learning.patch_extraction import extract_patches
 
 # images = glob(folder + "*VH*_aligned*.tif")
 
-extent_Alex= "D:/NIRAS/Buteo_EgyptData/Extent_Alexandria.gpkg"
-buildings = "D:/NIRAS/Buteo_EgyptData/Mixed_1.gpkg"
-buildings_rasterized= "D:/NIRAS/Buteo_EgyptData/M_buildings_rasterized_1.tif"
+extent_Alex= "D:/NIRAS/Buteo_EgyptData/Hammam/Hammam_extent3.gpkg"
+buildings = "D:/NIRAS/Buteo_EgyptData/Hammam/NonResidential_Hammam.gpkg"
+buildings_rasterized= "D:/NIRAS/Buteo_EgyptData/Hammam/NR_Hammam_1.tif"
 #buildings_rasterized_out= "D:/NIRAS/Buteo_EgyptData/buildings_rasterized_50cm.tif"
 
 
@@ -44,9 +44,9 @@ array_to_raster(
         #out_path=buildings_rasterized_out,
     )
 # %%
-buildings_rasterized= "D:/NIRAS/Buteo_EgyptData/M_buildings_rasterized_1.tif"
-buildings_resampled= "D:/NIRAS/Buteo_EgyptData/buildings_rasterized_resampled.tif"
-buildings_rr_final2= "D:/NIRAS/Buteo_EgyptData/M_buildings_resampled_1.tif"
+buildings_rasterized= "D:/NIRAS/Buteo_EgyptData/Hammam/NR_Hammam_1.tif"
+buildings_resampled= "D:/NIRAS/Buteo_EgyptData/Hammam/buildings_rasterized_resampled.tif"
+buildings_rr= "D:/NIRAS/Buteo_EgyptData/Hammam/NR_Hammam_resampled_1.tif"
 
 print("resampling.")
 internal_resample_raster(
@@ -62,7 +62,7 @@ array_to_raster(
         ),
         reference=buildings_resampled,
         # out_path=folder + f"fid_{number}_rasterized.tif",
-        out_path=buildings_rr_final2,
+        out_path=buildings_rr,
     )
 
 gdal.Unlink(buildings_rasterized)

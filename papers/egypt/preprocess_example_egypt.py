@@ -11,7 +11,8 @@ from buteo.earth_observation.s2_utils import (
 )
 from buteo.earth_observation.download import download_s2_tile, download_s1_tile
 from buteo.earth_observation.s2_mosaic import mosaic_tile_s2, join_s2_tiles
-from buteo.earth_observation.s1_mosaic import mosaic_s1, mosaic_s1
+from buteo.earth_observation.s1_mosaic import mosaic_s1
+from buteo.earth_observation.s1_mosaic import sort_rasters
 from buteo.earth_observation.s1_preprocess import backscatter
 from buteo.utils import delete_files_in_folder, make_dir_if_not_exists
 from glob import glob
@@ -58,7 +59,7 @@ onda_pass = "ONDA!Marltrill29"
 #         clouds=20,
 #     )
 
-# Download raw sentinel 1 files
+# # Download raw sentinel 1 files
 # for tile in project_tiles:
 #     download_s1_tile(
 #         scihub_username,
@@ -67,6 +68,7 @@ onda_pass = "ONDA!Marltrill29"
 #         onda_pass,
 #         folder_s1_raw,
 #         get_tile_geom_from_name(tile),
+#         min_overlap=0.1,
 #         date=(project_start_s1, project_end_s1),
 #     )
 
@@ -153,17 +155,24 @@ onda_pass = "ONDA!Marltrill29"
 # for dim in dims:
 #     convert_to_tiff(dim, folder_tmp, True)
 
-# #s2_mosaic_B12 = folder_raster + "B12_20m.tif"
+# s2_mosaic_B12 = folder_raster + "B12_20m.tif"
 
 
 # # Preprocess the sentinel 1 images
 # zip_files_s1 = glob(folder_s1_raw + "*.zip")
 # for idx, image in enumerate(zip_files_s1):
+#     name = os.path.splitext(os.path.basename(image))[0]
+#     name = name.split(".")[0]
+
+#     if len(glob(folder_tmp + name + "*.*")) > 0:
+#         print(f"{name} already processed, skipping..")
+#         continue
+
 #     try:
 #         backscatter(
 #             image,
 #             folder_tmp,
-#             folder_s1_mosaic,
+#             folder_tmp,
 #             extent=s2_mosaic_B12,
 #             epsg=project_epsg,
 #             decibel=True,
@@ -172,17 +181,21 @@ onda_pass = "ONDA!Marltrill29"
 #         raise Exception(f"Error with image: {image}, {e}")
 
 #     print(f"Completed {idx+1}/{len(zip_files_s1)}")
-folder_in= "C:/Users/MALT/Desktop/Gamma0/"
-s2_mosaic_B04 = folder_raster + "B04_10_left.tif"
-vv_paths = glob(folder_in + "*_Gamma0_VV.tif")
-vh_paths = glob(folder_in + "*_Gamma0_VH.tif")
+
+# exit()
+
+# folder_in= "C:/Users/MALT/Desktop/Gamma0/"
+s2_mosaic_B04 = folder_raster + "B04_10_right.tif"
+sar_folder= "C:/Users/MALT/Desktop/ICZM_sentinel/SAR1/"
+vv_paths = sort_rasters(glob(folder_s1_mosaic + "*_Gamma0_VV.tif"))
+vh_paths = sort_rasters(glob(folder_s1_mosaic + "*_Gamma0_VH.tif"))
 
 # Mosaic the sentinel 1 images
 mosaic_s1(
-    vv_paths,
+    [],
     vh_paths,
-    folder_raster,
-    folder_in,
+    sar_folder,
+    folder_tmp,
     s2_mosaic_B04,
     chunks=3,
 )

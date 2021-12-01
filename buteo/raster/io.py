@@ -700,17 +700,18 @@ def raster_to_array(
             else:
                 arr = band_ref.ReadAsArray()
 
-            if band_nodata_value is None and filled is False:
-                arr = np.ma.masked_invalid(arr)
-            elif filled is False:
-                arr = np.ma.masked_equal(arr, band_nodata_value)
+            if band_nodata_value is not None:
+                arr = np.ma.array(arr, mask=arr == band_nodata_value)
+
+                if filled:
+                    arr = arr.filled(band_nodata_value)
 
             layers.append(arr)
 
             if output_2d:
                 break
 
-    if output_2d:
+    if output_2d:       
         return np.dstack(layers)[:, :, 0]
 
     return np.dstack(layers)
@@ -1154,6 +1155,34 @@ def stack_rasters_vrt(
     gdal.BuildVRT(out_path, rasters, options=options)
 
     return out_path
+
+
+def rasters_intersect(
+    raster1: Union[list, str, gdal.Dataset],
+    raster2: Union[list, str, gdal.Dataset],
+) -> bool:
+    """Checks if two rasters intersect."""
+    type_check(raster1, [list, str, gdal.Dataset], "raster1")
+    type_check(raster2, [list, str, gdal.Dataset], "raster2")
+
+    meta1 = internal_raster_to_metadata(raster1, create_geometry=True)
+    meta2 = internal_raster_to_metadata(raster2, create_geometry=True)
+
+    return meta1["extent_geom_latlng"].Intersects(meta2["extent_geom_latlng"])
+
+
+def rasters_intersection(
+    raster1: Union[list, str, gdal.Dataset],
+    raster2: Union[list, str, gdal.Dataset],
+) -> bool:
+    """Checks if two rasters intersect."""
+    type_check(raster1, [list, str, gdal.Dataset], "raster1")
+    type_check(raster2, [list, str, gdal.Dataset], "raster2")
+
+    meta1 = internal_raster_to_metadata(raster1, create_geometry=True)
+    meta2 = internal_raster_to_metadata(raster2, create_geometry=True)
+
+    return meta1["extent_geom_latlng"].Intersection(meta2["extent_geom_latlng"])
 
 
 def copy_raster(
