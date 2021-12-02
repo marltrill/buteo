@@ -185,7 +185,7 @@ onda_pass = "ONDA!Marltrill29"
 # exit()
 
 # folder_in= "C:/Users/MALT/Desktop/Gamma0/"
-s2_mosaic_B04 = folder_raster + "B04_10_right.tif"
+s2_mosaic_B04 = folder_raster + "B04_10_left.tif"
 sar_folder= "C:/Users/MALT/Desktop/ICZM_sentinel/SAR1/"
 vv_paths = sort_rasters(glob(folder_s1_mosaic + "*_Gamma0_VV.tif"))
 vh_paths = sort_rasters(glob(folder_s1_mosaic + "*_Gamma0_VH.tif"))
@@ -197,5 +197,8 @@ mosaic_s1(
     sar_folder,
     folder_tmp,
     s2_mosaic_B04,
-    chunks=3,
+    nodata_value=-9999.0,
+    chunks=2,
+    feather_borders=True,
+    skip_completed=True,
 )
